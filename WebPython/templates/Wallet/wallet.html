@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}{{wallet.wallet_name}}{% endblock %}
+
+{% block content %}
+
+<h2>{{wallet.wallet_name}}({{wallet.wallet_char_code}})</h2>
+<hr>
+<p> Номинал: {{wallet_info.wallet_nominal}}</p>
+<p> Курс: {{wallet_info.wallet_value}}</p>
+<em> Дата: {{wallet_info.date}}</em>
+{% endblock %}

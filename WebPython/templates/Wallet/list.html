@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+
+    {% if wallets_list %}
+        {% for a in wallets_list %}
+            <a href="{% url 'Wallet:get_date' a%}">{{a}}</a><br>
+        {% endfor %}
+    {% else %}
+        Статья не найдена
+    {% endif %}
+
+
+<hr>
+
+
+<hr>
+<hr>
+
+{% endblock %}
+

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{{wallet.wallet_name}}{% endblock %}
+
+{% block content %}
+
+<h2>{{wallet.wallet_name}}({{wallet.wallet_char_code}})</h2>
+<hr>
+    {% if dates_in_memory %}
+        {% for date in dates_in_memory %}
+            <a href="{% url 'Wallet:show_wallet' wallet.wallet_name date%}">{{date}}</a><br>
+        {% endfor %}
+    {% else %}
+        Не загружены даты
+    {% endif %}
+
+    <form action="{% url 'Wallet:show_wallet' wallet.wallet_name%}" method="POST">
+
+        {% csrf_token %}
+
+        <input type="text" required placeholder="дата в формате ДД/ММ/ГГГГ" name="date"><br>
+
+        <button type="submit">Отобразить данную дату</button>
+    </form>
+{% endblock %}
