@@ -9,7 +9,7 @@ def get_date(request, wallet_name_):
     print('get_date')
     wallet = Wallet_indentificator.objects.get(wallet_name=wallet_name_)
     wallet_values = Wallet_value.objects.filter(wallet=wallet).order_by(
-        '-date')
+        '-date')[:10]
     dates = []
     for i in wallet_values:
         dates += [str(i.date)]
@@ -41,7 +41,6 @@ def show_wallet(request, wallet_name_, wallet_date_=None):
                       {'wallet': wallet, 'wallet_info': wallet_info})
     except:
         return add_date(request, wallet_name_)
-
 
 
 def main_page(request):
