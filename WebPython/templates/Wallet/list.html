@@ -3,7 +3,9 @@
 {% block title %}Главная страница{% endblock %}
 
 {% block content %}
-
+<em>Выберите валюту, чтобы посмотреть информацию о ней </em><br>
+<hr>
+<p align="center">
     {% if wallets_list %}
         {% for a in wallets_list %}
             <a href="{% url 'Wallet:get_date' a%}">{{a}}</a><br>
@@ -11,13 +13,9 @@
     {% else %}
         Статья не найдена
     {% endif %}
-
-
-<hr>
-
+</p>
 
 <hr>
-<hr>
-
+<em><font size="1"> (все данные берутся с центробанка. Отсутствие каких либо данных говорит об отсутсвии их на соответствующем сайте)</font></em>
 {% endblock %}
 

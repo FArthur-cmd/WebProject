@@ -5,17 +5,22 @@ from .models import Wallet_value, Wallet_indentificator
 
 
 def load_data(date_):
-    print("load data")
     req = requests.get("http://www.cbr.ru/scripts/XML_daily.asp?date_req=" +
                        date_)
     soup = BeautifulSoup(req.content, 'lxml')
-    wallets = Wallet_indentificator.objects.all()
     if date_.split('/') == str(soup.find('valcurs')['date']).split('.'):
         ids = soup.find_all('valute')
         for i in ids:
-            print(i)
-            wallet = wallets[ids.index(i)]
-            print(wallet.wallet_name)
+            try:
+                wallet = Wallet_indentificator.objects.get(wallet_name=i.find(
+                    'name').text)
+            except:
+                wallet = Wallet_indentificator(
+                    wallet_name=i.find('name').text,
+                    wallet_id=i['id'],
+                    wallet_char_code=i.find('charcode').text,
+                )
+                wallet.save()
             data = Wallet_value(
                 wallet=wallet,
                 wallet_nominal=int(i.find('nominal').text),
@@ -23,8 +28,6 @@ def load_data(date_):
                 date='-'.join(soup.find('valcurs')['date'].split('.')[::-1])
             )
             data.save()
-            print(data.wallet_nominal)
-            print(data.wallet_value)
     else:
         raise ValueError
 

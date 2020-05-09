@@ -45,7 +45,7 @@ def show_wallet(request, wallet_name_, wallet_date_=None):
 
 def main_page(request):
     wallet_names = []
-    wallets_list = Wallet_indentificator.objects.all()
+    wallets_list = Wallet_indentificator.objects.all().order_by('wallet_name')
     if len(wallets_list) == 0:
         load_name()
         wallets_list = Wallet_indentificator.objects.all()

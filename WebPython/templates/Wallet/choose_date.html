@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<h2>{{wallet.wallet_name}}({{wallet.wallet_char_code}})</h2>
+<h2 align="center">{{wallet.wallet_name}}({{wallet.wallet_char_code}})</h2>
 <hr>
     {% if dates_in_memory %}
         {% for date in dates_in_memory %}
@@ -13,6 +13,7 @@
     {% else %}
         Не загружены даты
     {% endif %}
+<hr>
 
     <form action="{% url 'Wallet:show_wallet' wallet.wallet_name%}" method="POST">
 
