@@ -1,15 +1,24 @@
 from django.shortcuts import render
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 
 from .load_data import load_data, load_name
 from .models import Wallet_indentificator, Wallet_value
+from .ClearRepeatedDate import clear_repeated_date
 
 
 def get_date(request, wallet_name_):
     print('get_date')
-    wallet = Wallet_indentificator.objects.get(wallet_name=wallet_name_)
-    wallet_values = Wallet_value.objects.filter(wallet=wallet).order_by(
-        '-date')[:10]
+    try:
+        wallet = Wallet_indentificator.objects.get(wallet_name=wallet_name_)
+        wallet_values = Wallet_value.objects.filter(wallet=wallet).order_by(
+            '-date')
+    except:
+        clear_repeated_date()
+        wallet = Wallet_indentificator.objects.get(wallet_name=wallet_name_)
+        wallet_values = Wallet_value.objects.filter(wallet=wallet).order_by(
+            '-date')
+    if len(wallet_values) > 10:
+        wallet_values = wallet_values[:10]
     dates = []
     for i in wallet_values:
         dates += [str(i.date)]

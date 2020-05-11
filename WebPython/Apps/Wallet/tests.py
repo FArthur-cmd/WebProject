@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from .load_data import load_data
 from .models import Wallet_value, Wallet_indentificator
+from .ClearRepeatedDate import clear_repeated_date
 
 
 # Create your tests here.
@@ -61,8 +62,9 @@ class TestSomeData(TestCase):
         wallet_value = wallet_value_list[0]
         self.date = (str(wallet_value.date))
         date = '/'.join(self.date.split('-')[::-1])
-        req = requests.get("http://www.cbr.ru/scripts/XML_daily.asp?date_req=" +
-                           date)
+        req = requests.get(
+            "http://www.cbr.ru/scripts/XML_daily.asp?date_req=" +
+            date)
         soup = BeautifulSoup(req.content, 'lxml')
         self.valutes = soup.find_all('valute')
 
@@ -79,3 +81,59 @@ class TestSomeData(TestCase):
                 'nominal').text))
 
 
+class TestReapeatedDateCleaner(TestCase):
+    def setUp(self) -> None:
+        example = Wallet_indentificator(
+            wallet_name="Testing",
+            wallet_id="TEST_ID",
+            wallet_char_code="TestChar"
+        )
+        example.save()
+        example_value = Wallet_value(
+            wallet=example,
+            wallet_nominal=2,
+            wallet_value=5.3,
+            date="2020-05-05"
+        )
+        example_value.save()
+        example_value = Wallet_value(
+            wallet=example,
+            wallet_nominal=2,
+            wallet_value=5.3,
+            date="2020-05-05"
+        )
+        example_value.save()
+        example = Wallet_indentificator(
+            wallet_name="Testing2",
+            wallet_id="TEST_ID",
+            wallet_char_code="TestChar"
+        )
+        example.save()
+        example_value = Wallet_value(
+            wallet=example,
+            wallet_nominal=3,
+            wallet_value=5.3,
+            date="2020-05-05"
+        )
+        example_value.save()
+        example_value = Wallet_value(
+            wallet=example,
+            wallet_nominal=3,
+            wallet_value=5.3,
+            date="2020-05-05"
+        )
+        example_value.save()
+        example_value = Wallet_value(
+            wallet=example,
+            wallet_nominal=3,
+            wallet_value=5.2,
+            date="2020-05-05"
+        )
+        example_value.save()
+
+    def test_removing(self):
+        clear_repeated_date()
+        first = Wallet_indentificator.objects.get(id=1)
+        second = Wallet_indentificator.objects.get(id=2)
+        self.assertEqual(len(Wallet_value.objects.filter(wallet=first)), 1)
+        self.assertEqual(len(Wallet_value.objects.filter(wallet=second)), 1)
