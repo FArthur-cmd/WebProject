@@ -12,8 +12,9 @@ def load_data(date_):
         ids = soup.find_all('valute')
         for i in ids:
             try:
-                wallet = Wallet_indentificator.objects.get(wallet_name=i.find(
-                    'name').text)
+                wallet = Wallet_indentificator.objects.get(
+                    wallet_name=i.find('name').text
+                )
             except:
                 wallet = Wallet_indentificator(
                     wallet_name=i.find('name').text,

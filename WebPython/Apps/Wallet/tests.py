@@ -63,22 +63,23 @@ class TestSomeData(TestCase):
         self.date = (str(wallet_value.date))
         date = '/'.join(self.date.split('-')[::-1])
         req = requests.get(
-            "http://www.cbr.ru/scripts/XML_daily.asp?date_req=" +
-            date)
+            "http://www.cbr.ru/scripts/XML_daily.asp?date_req=" + date
+        )
         soup = BeautifulSoup(req.content, 'lxml')
         self.valutes = soup.find_all('valute')
 
     def test_date(self):
         for valute in self.valutes:
-            wallet = Wallet_indentificator.objects.get(wallet_name=
-                                                       valute.find(
-                                                           'name').text)
+            wallet = Wallet_indentificator.objects.get(
+                wallet_name=valute.find('name').text
+            )
             wallet_value = Wallet_value.objects.get(wallet=wallet,
                                                     date=self.date)
-            self.assertEqual(wallet_value.wallet_value, float(
-                '.'.join(valute.find('value').text.split(','))))
-            self.assertEqual(wallet_value.wallet_nominal, int(valute.find(
-                'nominal').text))
+            self.assertEqual(
+                wallet_value.wallet_value,
+                float('.'.join(valute.find('value').text.split(','))))
+            self.assertEqual(wallet_value.wallet_nominal,
+                             int(valute.find('nominal').text))
 
 
 class TestReapeatedDateCleaner(TestCase):
